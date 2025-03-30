@@ -1,13 +1,34 @@
 <?php
 
-if (floor(floatval(phpversion())) < 8)
-{
-	die('BambooInvoice requires PHP version 5 or higher.  After you have satisfied this, you can try re-installing.');
-}
+#if (floor(phpversion()) < 5)
+#{
+#	die('BambooInvoice requires PHP version 5 or higher.  After you have satisfied this, you can try re-installing.');
+#}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * CodeIgniter
  */
+
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
@@ -27,6 +48,39 @@ if (floor(floatval(phpversion())) < 8)
  */
 	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
 
+/*
+ *---------------------------------------------------------------
+ * ERROR REPORTING
+ *---------------------------------------------------------------
+ *
+ * Different environments will require different levels of error reporting.
+ * By default development will show errors but testing and live will hide them.
+ */
+switch (ENVIRONMENT)
+{
+	case 'development':
+		error_reporting(-1);
+		ini_set('display_errors', 1);
+	break;
+
+	case 'testing':
+	case 'production':
+		ini_set('display_errors', 0);
+		if (version_compare(PHP_VERSION, '5.3', '>='))
+		{
+			error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT & ~E_USER_NOTICE & ~E_USER_DEPRECATED);
+		}
+		else
+		{
+			error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_USER_NOTICE);
+		}
+	break;
+
+	default:
+		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
+		echo 'The application environment is not set correctly.';
+		exit(1); // EXIT_ERROR
+}
 
 /*
  *---------------------------------------------------------------
@@ -35,12 +89,8 @@ if (floor(floatval(phpversion())) < 8)
  *
  * This variable must contain the name of your "system" directory.
  * Set the path if it is not in the same directory as this file.
-	|
-	| NO TRAILING SLASH!
-	|
-		old system_folder = "bamboo_system_files";
  */
-	$system_path = 'CI-system';
+	$system_path = 'system';
 
 /*
  *---------------------------------------------------------------
@@ -126,55 +176,6 @@ if (floor(floatval(phpversion())) < 8)
 // --------------------------------------------------------------------
 // END OF USER CONFIGURABLE SETTINGS.  DO NOT EDIT BELOW THIS LINE
 // --------------------------------------------------------------------
-
-/*
-|---------------------------------------------------------------
-| DEFINE E_STRICT
-|---------------------------------------------------------------
-|
-| Some older versions of PHP don't support the E_STRICT constant
-| so we need to explicitly define it otherwise the Exception class 
-| will generate errors.
-|
-*/
-if ( ! defined('E_STRICT'))
-{
-	define('E_STRICT', 2048);
-}
-
-/*
- *---------------------------------------------------------------
- * ERROR REPORTING
- *---------------------------------------------------------------
- *
- * Different environments will require different levels of error reporting.
- * By default development will show errors but testing and live will hide them.
- */
-switch (ENVIRONMENT)
-{
-	case 'development':
-		error_reporting(-1);
-		ini_set('display_errors', 1);
-	break;
-
-	case 'testing':
-	case 'production':
-		ini_set('display_errors', 0);
-		if (version_compare(PHP_VERSION, '5.3', '>='))
-		{
-			error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT & ~E_USER_NOTICE & ~E_USER_DEPRECATED);
-		}
-		else
-		{
-			error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_USER_NOTICE);
-		}
-	break;
-
-	default:
-		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
-		echo 'The application environment is not set correctly.';
-		exit(1); // EXIT_ERROR
-}
 
 /*
  * ---------------------------------------------------------------
@@ -296,10 +297,6 @@ switch (ENVIRONMENT)
 	}
 
 	define('VIEWPATH', $view_folder.DIRECTORY_SEPARATOR);
-
-
-
-/*
 
 /*
  * --------------------------------------------------------------------
