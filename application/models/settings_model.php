@@ -1,5 +1,5 @@
 <?php
-class settings_model extends Model {
+class settings_model extends CI_Model {
 
 	function getCompanyInfo()
 	{

@@ -1,6 +1,6 @@
 <?php
 
-if (floor(floatval(phpversion())) < 8)
+if (floor(intval(phpversion())) < 5)
 {
 	die('BambooInvoice requires PHP version 5 or higher.  After you have satisfied this, you can try re-installing.');
 }
